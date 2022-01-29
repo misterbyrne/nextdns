@@ -312,7 +312,8 @@ func run(args []string) error {
 			}
 			p.Proxy.DiscoveryResolver = discoveryResolver
 			discoveryMerlin := &discovery.Merlin{OnError: func(err error) { log.Errorf("merlin: %v", err) }}
-			r = discovery.Resolver{discoverHosts, discoveryMerlin, &discovery.Ubios{}, discoverMDNS, discoverDHCP, discoverDNS}
+			discoveryUbios := &discovery.Ubios{OnError: func(err error) { log.Errorf("ubios: %v", err) }}
+			r = discovery.Resolver{discoverHosts, discoveryMerlin, discoveryUbios, discoverMDNS, discoverDHCP, discoverDNS}
 			ctl.Command("discovered", func(data interface{}) interface{} {
 				d := map[string]map[string][]string{}
 				r.Visit(func(source, name string, addrs []string) {
